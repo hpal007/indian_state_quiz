@@ -28,7 +28,6 @@ def print_all_state():
             p.goto(row["x"], row["y"])
             p.color("red")
             p.write(row["state"])
-        print(row["state"])
 
 
 guessed_state = []
@@ -37,16 +36,14 @@ while len(guessed_state) < 36:
     answer_state = screen.textinput(title="Guess The State", prompt="Whats the another state's name").title()
     print(answer_state)
     if answer_state == 'Exit':
-        missing_states = []
-        for state in all_states:
-            if state not in guessed_state:
-                missing_states.append(state)
+        missing_states = [state for state in all_states if state not in guessed_state]
         new_data = pd.DataFrame(missing_states)
         print_all_state()
         new_data.to_csv("states_to_learn.csv")
         break
 
     if answer_state in all_states:
+        guessed_state.append(answer_state)
         t = turtle.Turtle("circle")
         t.shapesize(2 / 20)
         t.shape()
@@ -56,6 +53,7 @@ while len(guessed_state) < 36:
         row_data = state_data[state_data.state == answer_state]
         t.goto(int(row_data.x), int(row_data.y))
         t.write(answer_state)
+
         print(row_data)
 
 screen.exitonclick()
